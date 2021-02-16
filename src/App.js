@@ -1,38 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {styles} from './style.css';
+import './style.css';
 
 
 
 const App = () => {
-    const [people, setPeople] = useState('Darth Vader');
-    const [results, setResults] = useState([])
+    const [person, setPerson] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [results, setResults] = useState([{name: '', age: ''}]);
+
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedSearch(person);
+        }, 1000);
+
+        return () => {
+            clearTimeout(timerId);
+        }
+
+    }, [person])
+
 
     useEffect(() => {
        const search = async () => {
-            const { data } = await axios.get(`https://swapi.dev/api/people/?search=${people}`);
-            setResults(data.results[0]);
+            const { data } = await axios.get(`https://swapi.dev/api/people/?search=${debouncedSearch}`);
+            setResults(data.results);
+            console.log(results);
         };
-        search();
-    }, [people])
+        if (debouncedSearch) {
+            search();      
+        }
+    }, [debouncedSearch])
 
-    console.log(results);
+    // const renderedResults = 
 
     return (
         <div className="main-window">
             <div className="form">
                 <label>Search for characters</label>
                 <input 
-                        className="input"
-                        value={people}
-                        onChange={(e) => setPeople(e.target.value)}
-                        />
-                
+                    className="input"
+                    value={person}
+                    onChange={(e) => setPerson(e.target.value)}
+                />
             </div>
             <div className="character-data">
-                <h1>{results.name}</h1>
-                <p>gender: {results.gender}</p>
-                <p>eye color: {results.eye_color}</p>
+                <h1>{results[0].name}</h1>
             </div>
         
         </div>
