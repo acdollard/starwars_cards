@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Card from './components/Card';
 import './style.css';
 
 
@@ -32,20 +33,33 @@ const App = () => {
         }
     }, [debouncedSearch])
 
-    // const renderedResults = 
+    console.log(results);
+
+    const renderedCard = results.map((result) => {
+        return (
+            <div className="card" key={result.name}>
+                <h2>Name: {result.name}</h2>
+                <p>Birth year: {result.birth_year}</p>
+                <p>Eye color: {result.eye_color}</p>
+            </div>
+        );
+    })
 
     return (
         <div className="main-window">
-            <div className="ui form">
+            <div className="ui form" style={{}}>
                 <label>Search for characters</label>
                 <input 
                     className="input"
                     value={person}
                     onChange={(e) => setPerson(e.target.value)}
                 />
+                
+                <button className="ui button" style={{margin: "5px"}}>Save</button>
             </div>
+
             <div className="character-data">
-                <h1>{results[0].name}</h1>
+                {renderedCard}
             </div>
         
         </div>
