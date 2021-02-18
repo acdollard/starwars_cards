@@ -26,7 +26,6 @@ const App = () => {
        const search = async () => {
             const { data } = await axios.get(`https://swapi.dev/api/people/?search=${debouncedSearch}`);
             setResults(data.results);
-            console.log(results);
         };
         if (debouncedSearch) {
             search();      
@@ -37,7 +36,7 @@ const App = () => {
 
     return (
         <div className="main-window">
-            <div className="form">
+            <div className="ui form">
                 <label>Search for characters</label>
                 <input 
                     className="input"
