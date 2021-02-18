@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Card from './components/Card';
 import './style.css';
 
 
@@ -8,7 +7,7 @@ import './style.css';
 const App = () => {
     const [person, setPerson] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
-    const [results, setResults] = useState([{name: '', age: ''}]);
+    const [results, setResults] = useState([]);
 
 
     useEffect(() => {
@@ -26,7 +25,7 @@ const App = () => {
     useEffect(() => {
        const search = async () => {
             const { data } = await axios.get(`https://swapi.dev/api/people/?search=${debouncedSearch}`);
-            setResults(data.results);
+            setResults([...results, data.results[0]]);
         };
         if (debouncedSearch) {
             search();      
@@ -36,13 +35,17 @@ const App = () => {
     console.log(results);
 
     const renderedCard = results.map((result) => {
-        return (
-            <div className="card" key={result.name}>
-                <h2>Name: {result.name}</h2>
-                <p>Birth year: {result.birth_year}</p>
-                <p>Eye color: {result.eye_color}</p>
-            </div>
-        );
+        if (results.length < 1) {
+            return;
+        } else {
+            return (
+                <div className="card" key={result.name}>
+                    <h2>Name: {result.name}</h2>
+                    <p>Birth year: {result.birth_year}</p>
+                    <p>Eye color: {result.eye_color}</p>
+                </div>
+            );
+        }
     })
 
     return (
